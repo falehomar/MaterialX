@@ -146,3 +146,35 @@ if(MSVC)
     install(FILES $<TARGET_PDB_FILE:MaterialXView>
             DESTINATION ${MATERIALX_INSTALL_BIN_PATH} OPTIONAL)
 endif()
+
+# --- Java Integration ---
+find_package(Java REQUIRED COMPONENTS Development)
+include(UseJava)
+
+set(materialx_java_source ${materialx_source})
+list(REMOVE_ITEM materialx_java_source "${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp")
+list(APPEND materialx_java_source "${CMAKE_CURRENT_SOURCE_DIR}/java/ViewerRunner.cpp")
+
+add_library(MaterialXViewJava SHARED ${materialx_java_source} ${materialx_headers})
+
+target_link_libraries(
+    MaterialXViewJava
+    ${MATERIALX_LIBRARIES}
+    ${NANOGUI_LIBRARIES}
+    ${NANOGUI_EXTRA_LIBS})
+
+target_include_directories(
+    MaterialXViewJava
+    PRIVATE
+    ${NANOGUI_INCLUDE_DIRS}
+    ${NANOGUI_EXTRA_INCS})
+
+set_target_properties(
+    MaterialXViewJava PROPERTIES
+    INSTALL_RPATH "${MATERIALX_UP_ONE_RPATH}")
+
+add_jar(MaterialXViewer
+    SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/java/MaterialXViewer.java"
+    ENTRY_POINT "materialx.MaterialXViewer"
+)
+
