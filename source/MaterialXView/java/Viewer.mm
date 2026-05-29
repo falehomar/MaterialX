@@ -415,6 +415,7 @@ void Viewer::loadDocument(const mx::FilePath& filename, mx::DocumentPtr librarie
         {
             mx::MaterialPtr material = _renderPipeline->createMaterial();
             material->setDocument(doc);
+            material->setElement(materialNode);
             material->setMaterialNode(materialNode);
             newMaterials.push_back(material);
         }
