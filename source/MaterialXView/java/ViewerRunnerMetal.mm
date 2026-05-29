@@ -157,7 +157,7 @@ EXPORT int runViewer(int argc, char* const argv[])
         int screenWidth = 1280;
         int screenHeight = 960;
         mx::Color3 screenColor(mx::DEFAULT_SCREEN_COLOR_SRGB);
-        bool drawEnvironment = false;
+        bool drawEnvironment = true;
         std::string captureFilename;
         int bakeWidth = 0;
         int bakeHeight = 0;
@@ -201,6 +201,10 @@ EXPORT int runViewer(int argc, char* const argv[])
             else if (token == "--cube")
             {
                 renderSimpleCube = true;
+            }
+            else if (token == "--drawEnvironment")
+            {
+                drawEnvironment = (nextToken == "true" || nextToken == "1");
             }
             
             if (!nextToken.empty() && token != "--cube")
