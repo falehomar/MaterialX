@@ -151,23 +151,39 @@ endif()
 find_package(Java REQUIRED COMPONENTS Development)
 include(UseJava)
 
-set(materialx_java_source ${materialx_source})
-list(REMOVE_ITEM materialx_java_source "${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp")
-list(APPEND materialx_java_source "${CMAKE_CURRENT_SOURCE_DIR}/java/ViewerRunner.cpp")
+set(materialx_java_source
+    "${CMAKE_CURRENT_SOURCE_DIR}/java/ViewerRunnerMetal.mm"
+    "${CMAKE_CURRENT_SOURCE_DIR}/java/Viewer.mm"
+    "${CMAKE_CURRENT_SOURCE_DIR}/java/RenderPipelineMetal.mm"
+)
+set(materialx_java_headers
+    "${CMAKE_CURRENT_SOURCE_DIR}/java/Viewer.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/java/RenderPipeline.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/java/RenderPipelineMetal.h"
+)
 
-add_library(MaterialXViewJava SHARED ${materialx_java_source} ${materialx_headers})
+add_library(MaterialXViewJava SHARED ${materialx_java_source} ${materialx_java_headers})
+
+find_library(COCOA_LIBRARY Cocoa REQUIRED)
+find_library(METAL_LIBRARY Metal REQUIRED)
+find_library(QUARTZ_LIBRARY QuartzCore REQUIRED)
+find_library(APPKIT_LIBRARY AppKit REQUIRED)
 
 target_link_libraries(
     MaterialXViewJava
     ${MATERIALX_LIBRARIES}
-    ${NANOGUI_LIBRARIES}
-    ${NANOGUI_EXTRA_LIBS})
+    ${COCOA_LIBRARY}
+    ${METAL_LIBRARY}
+    ${QUARTZ_LIBRARY}
+    ${APPKIT_LIBRARY}
+)
 
 target_include_directories(
     MaterialXViewJava
     PRIVATE
-    ${NANOGUI_INCLUDE_DIRS}
-    ${NANOGUI_EXTRA_INCS})
+    "${CMAKE_CURRENT_SOURCE_DIR}/java"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.."
+)
 
 set_target_properties(
     MaterialXViewJava PROPERTIES
@@ -177,4 +193,5 @@ add_jar(MaterialXViewer
     SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/java/MaterialXViewer.java"
     ENTRY_POINT "materialx.MaterialXViewer"
 )
+
 
