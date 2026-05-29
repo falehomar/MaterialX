@@ -39,7 +39,7 @@
         [self setWantsLayer:YES];
         _metalLayer = [CAMetalLayer layer];
         _metalLayer.device = _device;
-        _metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+        _metalLayer.pixelFormat = MTLPixelFormatRGBA16Float;
         _metalLayer.framebufferOnly = NO; // support read-back
         _metalLayer.opaque = YES;
         [self setLayer:_metalLayer];
