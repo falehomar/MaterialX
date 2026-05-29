@@ -1,5 +1,7 @@
 package materialx;
 
+import javax.swing.*;
+import java.awt.*;
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.nio.file.Path;
@@ -7,6 +9,27 @@ import java.nio.file.Paths;
 
 public class MaterialXViewer {
     public static void main(String[] args) throws Throwable {
+        // Open a Swing JFrame before calling any MaterialX logic
+        SwingUtilities.invokeAndWait(() -> {
+            JFrame frame = new JFrame("MaterialX Java Host Panel");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setSize(500, 200);
+            frame.setLayout(new BorderLayout());
+            
+            JLabel titleLabel = new JLabel("MaterialX Java Controller", SwingConstants.CENTER);
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            frame.add(titleLabel, BorderLayout.CENTER);
+            
+            JLabel statusLabel = new JLabel("Launching native macOS Metal Viewer...", SwingConstants.CENTER);
+            statusLabel.setForeground(Color.GRAY);
+            statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+            frame.add(statusLabel, BorderLayout.SOUTH);
+            
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+
         String libName = System.mapLibraryName("MaterialXViewJava");
         String libPathStr = System.getProperty("materialx.lib.path");
         Path libPath;
