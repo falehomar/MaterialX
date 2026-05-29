@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class MaterialXViewer {
     public static void main(String[] args) throws Throwable {
         // Open a Swing JFrame before calling any MaterialX logic
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("MaterialX Java Host Panel");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setSize(500, 200);
