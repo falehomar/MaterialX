@@ -454,6 +454,11 @@ void Viewer::reloadShaders()
             if (mslMaterial && mslMaterial->getProgram())
             {
                 std::cout << "[MaterialX Viewer LOG] Successfully generated MSL program for material index " << i << std::endl;
+                if (material->getShader())
+                {
+                    std::cout << "[MaterialX Shader LOG] Vertex Shader Source:\n" << material->getShader()->getSourceCode(mx::Stage::VERTEX) << std::endl;
+                    std::cout << "[MaterialX Shader LOG] Fragment/Pixel Shader Source:\n" << material->getShader()->getSourceCode(mx::Stage::PIXEL) << std::endl;
+                }
             }
             else
             {

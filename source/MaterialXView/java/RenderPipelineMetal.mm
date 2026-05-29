@@ -409,6 +409,18 @@ void MetalRenderPipeline::renderFrame(void* color_texture, int shadowMapSize, co
     float lightRotation = _viewer->_lightRotation;
     auto& searchPath    = _viewer->_searchPath;
     auto& geometryHandler    = _viewer->_geometryHandler;
+
+    std::cout << "[renderFrame LOG] --- BEGIN FRAME ---" << std::endl;
+    std::cout << "[renderFrame LOG] color_texture: " << color_texture << std::endl;
+    std::cout << "[renderFrame LOG] shadowMapSize: " << shadowMapSize << std::endl;
+    std::cout << "[renderFrame LOG] dirLightNodeCat: " << (dirLightNodeCat ? dirLightNodeCat : "null") << std::endl;
+    std::cout << "[renderFrame LOG] lightRotation: " << lightRotation << std::endl;
+    std::cout << "[renderFrame LOG] getUsePrefilteredMap: " << lightHandler->getUsePrefilteredMap() << std::endl;
+    std::cout << "[renderFrame LOG] envLightIntensity: " << lightHandler->getEnvLightIntensity() << std::endl;
+    std::cout << "[renderFrame LOG] cameraPosition: (" << viewCamera->getViewPosition()[0] << ", " << viewCamera->getViewPosition()[1] << ", " << viewCamera->getViewPosition()[2] << ")" << std::endl;
+    std::cout << "[renderFrame LOG] cameraDirection: (" << viewCamera->getViewDirection()[0] << ", " << viewCamera->getViewDirection()[1] << ", " << viewCamera->getViewDirection()[2] << ")" << std::endl;
+    std::cout << "[renderFrame LOG] renderSimpleCube: " << _viewer->getRenderSimpleCube() << std::endl;
+    std::cout << "[renderFrame LOG] materialAssignments size: " << _viewer->_materialAssignments.size() << std::endl;
     
     // Update prefiltered environment.
     if (lightHandler->getUsePrefilteredMap() && !_viewer->_materialAssignments.empty())
@@ -694,8 +706,12 @@ void MetalRenderPipeline::renderFrame(void* color_texture, int shadowMapSize, co
             shadowState.ambientOcclusionMap = _viewer->getAmbientOcclusionImage(material);
             if (!material || !material->getProgram())
             {
+                std::cout << "[renderFrame LOG] Skipping empty material/program for partition: " << (geom ? geom->getName() : "null") << std::endl;
                 continue;
             }
+
+            std::cout << "[renderFrame LOG] Binding material for partition: " << geom->getName() << std::endl;
+            std::cout << "[renderFrame LOG]   Has AO Map: " << (shadowState.ambientOcclusionMap ? "yes" : "no") << std::endl;
 
             material->bindShader();
             material->bindMesh(_viewer->_geometryHandler->findParentMesh(geom));
@@ -711,6 +727,8 @@ void MetalRenderPipeline::renderFrame(void* color_texture, int shadowMapSize, co
                                  geometryHandler,
                                  imageHandler,
                                  lightHandler);
+            
+            std::cout << "[renderFrame LOG]   Drawing partition: " << geom->getName() << " with " << geom->getIndices().size() << " indices" << std::endl;
             material->drawPartition(geom);
             material->unbindImages(imageHandler);
         }
